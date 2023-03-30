@@ -18,7 +18,7 @@ class Port
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(mappedBy: 'port_arrivee', targetEntity: Liaison::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'portDepart', targetEntity: Liaison::class)]
     private Collection $liaisons;
 
     public function __construct()
@@ -55,7 +55,7 @@ class Port
     {
         if (!$this->liaisons->contains($liaison)) {
             $this->liaisons->add($liaison);
-            $liaison->setPortArrivee($this);
+            $liaison->setPortDepart($this);
         }
 
         return $this;
@@ -65,11 +65,16 @@ class Port
     {
         if ($this->liaisons->removeElement($liaison)) {
             // set the owning side to null (unless already changed)
-            if ($liaison->getPortArrivee() === $this) {
-                $liaison->setPortArrivee(null);
+            if ($liaison->getPortDepart() === $this) {
+                $liaison->setPortDepart(null);
             }
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nom;
     }
 }

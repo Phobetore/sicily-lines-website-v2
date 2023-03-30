@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TraverseeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,22 +16,83 @@ class Traversee
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\ManyToOne(inversedBy: 'traversees')]
+    private ?Liaison $liaison = null;
+
+    #[ORM\ManyToOne(inversedBy: 'traversees')]
+    private ?Bateau $bateau = null;
+
+    #[ORM\OneToMany(mappedBy: 'traversee', targetEntity: Reservation::class)]
+    private Collection $reservations;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $heure = null;
 
-    #[ORM\ManyToOne(inversedBy: 'traversees')]
-    private ?bateau $bateau = null;
-
-    #[ORM\ManyToOne(inversedBy: 'traversees')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?liaison $liaison = null;
+    public function __construct()
+    {
+        $this->reservations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getLiaison(): ?liaison
+    {
+        return $this->liaison;
+    }
+
+    public function setLiaison(?liaison $liaison): self
+    {
+        $this->liaison = $liaison;
+
+        return $this;
+    }
+
+    public function getBateau(): ?bateau
+    {
+        return $this->bateau;
+    }
+
+    public function setBateau(?bateau $bateau): self
+    {
+        $this->bateau = $bateau;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): self
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setTraversee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): self
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getTraversee() === $this) {
+                $reservation->setTraversee(null);
+            }
+        }
+
+        return $this;
     }
 
     public function getDate(): ?\DateTimeInterface
@@ -52,30 +115,6 @@ class Traversee
     public function setHeure(\DateTimeInterface $heure): self
     {
         $this->heure = $heure;
-
-        return $this;
-    }
-
-    public function getBateau(): ?bateau
-    {
-        return $this->bateau;
-    }
-
-    public function setBateau(?bateau $bateau): self
-    {
-        $this->bateau = $bateau;
-
-        return $this;
-    }
-
-    public function getLiaison(): ?liaison
-    {
-        return $this->liaison;
-    }
-
-    public function setLiaison(?liaison $liaison): self
-    {
-        $this->liaison = $liaison;
 
         return $this;
     }

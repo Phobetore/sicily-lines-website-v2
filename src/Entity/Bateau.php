@@ -15,31 +15,31 @@ class Bateau
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $longueur = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     private ?int $largeur = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $vitesse = null;
+    #[ORM\Column(length: 10)]
+    private ?string $vitesse = null;
 
-    #[ORM\OneToMany(mappedBy: 'bateau', targetEntity: Contenir::class)]
-    private Collection $contenirs;
+    #[ORM\OneToMany(mappedBy: 'bateau', targetEntity: EquipementBateau::class, orphanRemoval: true)]
+    private Collection $equipementsBateau;
 
-    #[ORM\OneToMany(mappedBy: 'bateau', targetEntity: Proposer::class)]
-    private Collection $proposers;
+    #[ORM\OneToMany(mappedBy: 'bateau', targetEntity: BateauCategorie::class)]
+    private Collection $bateauCategories;
 
     #[ORM\OneToMany(mappedBy: 'bateau', targetEntity: Traversee::class)]
     private Collection $traversees;
 
     public function __construct()
     {
-        $this->contenirs = new ArrayCollection();
-        $this->proposers = new ArrayCollection();
+        $this->equipementsBateau = new ArrayCollection();
+        $this->bateauCategories = new ArrayCollection();
         $this->traversees = new ArrayCollection();
     }
 
@@ -65,7 +65,7 @@ class Bateau
         return $this->longueur;
     }
 
-    public function setLongueur(?int $longueur): self
+    public function setLongueur(int $longueur): self
     {
         $this->longueur = $longueur;
 
@@ -77,19 +77,19 @@ class Bateau
         return $this->largeur;
     }
 
-    public function setLargeur(?int $largeur): self
+    public function setLargeur(int $largeur): self
     {
         $this->largeur = $largeur;
 
         return $this;
     }
 
-    public function getVitesse(): ?int
+    public function getVitesse(): ?string
     {
         return $this->vitesse;
     }
 
-    public function setVitesse(?int $vitesse): self
+    public function setVitesse(string $vitesse): self
     {
         $this->vitesse = $vitesse;
 
@@ -97,29 +97,29 @@ class Bateau
     }
 
     /**
-     * @return Collection<int, Contenir>
+     * @return Collection<int, EquipementBateau>
      */
-    public function getContenirs(): Collection
+    public function getEquipementsBateau(): Collection
     {
-        return $this->contenirs;
+        return $this->equipementsBateau;
     }
 
-    public function addContenir(Contenir $contenir): self
+    public function addEquipementsBateau(EquipementBateau $equipementsBateau): self
     {
-        if (!$this->contenirs->contains($contenir)) {
-            $this->contenirs->add($contenir);
-            $contenir->setBateau($this);
+        if (!$this->equipementsBateau->contains($equipementsBateau)) {
+            $this->equipementsBateau->add($equipementsBateau);
+            $equipementsBateau->setBateau($this);
         }
 
         return $this;
     }
 
-    public function removeContenir(Contenir $contenir): self
+    public function removeEquipementsBateau(EquipementBateau $equipementsBateau): self
     {
-        if ($this->contenirs->removeElement($contenir)) {
+        if ($this->equipementsBateau->removeElement($equipementsBateau)) {
             // set the owning side to null (unless already changed)
-            if ($contenir->getBateau() === $this) {
-                $contenir->setBateau(null);
+            if ($equipementsBateau->getBateau() === $this) {
+                $equipementsBateau->setBateau(null);
             }
         }
 
@@ -127,29 +127,29 @@ class Bateau
     }
 
     /**
-     * @return Collection<int, Proposer>
+     * @return Collection<int, BateauCategorie>
      */
-    public function getProposers(): Collection
+    public function getBateauCategories(): Collection
     {
-        return $this->proposers;
+        return $this->bateauCategories;
     }
 
-    public function addProposer(Proposer $proposer): self
+    public function addBateauCategory(BateauCategorie $bateauCategory): self
     {
-        if (!$this->proposers->contains($proposer)) {
-            $this->proposers->add($proposer);
-            $proposer->setBateau($this);
+        if (!$this->bateauCategories->contains($bateauCategory)) {
+            $this->bateauCategories->add($bateauCategory);
+            $bateauCategory->setBateau($this);
         }
 
         return $this;
     }
 
-    public function removeProposer(Proposer $proposer): self
+    public function removeBateauCategory(BateauCategorie $bateauCategory): self
     {
-        if ($this->proposers->removeElement($proposer)) {
+        if ($this->bateauCategories->removeElement($bateauCategory)) {
             // set the owning side to null (unless already changed)
-            if ($proposer->getBateau() === $this) {
-                $proposer->setBateau(null);
+            if ($bateauCategory->getBateau() === $this) {
+                $bateauCategory->setBateau(null);
             }
         }
 
@@ -185,4 +185,5 @@ class Bateau
 
         return $this;
     }
+
 }

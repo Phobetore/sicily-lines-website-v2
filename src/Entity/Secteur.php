@@ -16,7 +16,7 @@ class Secteur
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
-    private ?string $nom = null;
+    private ?string $libelle = null;
 
     #[ORM\OneToMany(mappedBy: 'secteur', targetEntity: Liaison::class, orphanRemoval: true)]
     private Collection $liaisons;
@@ -31,14 +31,14 @@ class Secteur
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getLibelle(): ?string
     {
-        return $this->nom;
+        return $this->libelle;
     }
 
-    public function setNom(string $nom): self
+    public function setLibelle(string $libelle): self
     {
-        $this->nom = $nom;
+        $this->libelle = $libelle;
 
         return $this;
     }
@@ -71,5 +71,10 @@ class Secteur
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->libelle;
     }
 }

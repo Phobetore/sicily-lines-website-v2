@@ -15,27 +15,29 @@ class Liaison
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 6)]
+    #[ORM\Column(length: 7)]
     private ?string $duree = null;
 
     #[ORM\ManyToOne(inversedBy: 'liaisons')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?secteur $secteur = null;
-
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?port $port_depart = null;
+    private ?Secteur $secteur = null;
 
     #[ORM\ManyToOne(inversedBy: 'liaisons')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?port $port_arrivee = null;
+    private ?Port $portDepart = null;
 
-    #[ORM\OneToMany(mappedBy: 'liaison', targetEntity: Traversee::class, orphanRemoval: true)]
+    #[ORM\ManyToOne(inversedBy: 'liaisons')]
+    private ?Port $portArrivee = null;
+
+    #[ORM\OneToMany(mappedBy: 'liaison', targetEntity: Traversee::class)]
     private Collection $traversees;
+
+    #[ORM\OneToMany(mappedBy: 'liaison', targetEntity: LiaisonPeriodeType::class)]
+    private Collection $liaisonPeriodeTypes;
 
     public function __construct()
     {
         $this->traversees = new ArrayCollection();
+        $this->liaisonPeriodeTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,24 +71,24 @@ class Liaison
 
     public function getPortDepart(): ?port
     {
-        return $this->port_depart;
+        return $this->portDepart;
     }
 
-    public function setPortDepart(?port $port_depart): self
+    public function setPortDepart(?port $portDepart): self
     {
-        $this->port_depart = $port_depart;
+        $this->portDepart = $portDepart;
 
         return $this;
     }
 
     public function getPortArrivee(): ?port
     {
-        return $this->port_arrivee;
+        return $this->portArrivee;
     }
 
-    public function setPortArrivee(?port $port_arrivee): self
+    public function setPortArrivee(?port $portArrivee): self
     {
-        $this->port_arrivee = $port_arrivee;
+        $this->portArrivee = $portArrivee;
 
         return $this;
     }
@@ -115,6 +117,36 @@ class Liaison
             // set the owning side to null (unless already changed)
             if ($traversee->getLiaison() === $this) {
                 $traversee->setLiaison(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LiaisonPeriodeType>
+     */
+    public function getLiaisonPeriodeTypes(): Collection
+    {
+        return $this->liaisonPeriodeTypes;
+    }
+
+    public function addLiaisonPeriodeType(LiaisonPeriodeType $liaisonPeriodeType): self
+    {
+        if (!$this->liaisonPeriodeTypes->contains($liaisonPeriodeType)) {
+            $this->liaisonPeriodeTypes->add($liaisonPeriodeType);
+            $liaisonPeriodeType->setLiaison($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiaisonPeriodeType(LiaisonPeriodeType $liaisonPeriodeType): self
+    {
+        if ($this->liaisonPeriodeTypes->removeElement($liaisonPeriodeType)) {
+            // set the owning side to null (unless already changed)
+            if ($liaisonPeriodeType->getLiaison() === $this) {
+                $liaisonPeriodeType->setLiaison(null);
             }
         }
 

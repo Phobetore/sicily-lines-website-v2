@@ -18,13 +18,19 @@ class Categorie
     #[ORM\Column(length: 100)]
     private ?string $libelle = null;
 
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Contenir::class)]
-    private Collection $contenirs;
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: BateauCategorie::class)]
+    private Collection $bateauCategories;
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Type::class)]
+    private Collection $types;
 
     public function __construct()
     {
-        $this->contenirs = new ArrayCollection();
+        $this->bateauCategories = new ArrayCollection();
+        $this->types = new ArrayCollection();
     }
+
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: BateauCategorie::class)]
 
     public function getId(): ?int
     {
@@ -44,32 +50,63 @@ class Categorie
     }
 
     /**
-     * @return Collection<int, Contenir>
+     * @return Collection<int, BateauCategorie>
      */
-    public function getContenirs(): Collection
+    public function getBateauCategories(): Collection
     {
-        return $this->contenirs;
+        return $this->bateauCategories;
     }
 
-    public function addContenir(Contenir $contenir): self
+    public function addBateauCategory(BateauCategorie $bateauCategory): self
     {
-        if (!$this->contenirs->contains($contenir)) {
-            $this->contenirs->add($contenir);
-            $contenir->setCategorie($this);
+        if (!$this->bateauCategories->contains($bateauCategory)) {
+            $this->bateauCategories->add($bateauCategory);
+            $bateauCategory->setCategorie($this);
         }
 
         return $this;
     }
 
-    public function removeContenir(Contenir $contenir): self
+    public function removeBateauCategory(BateauCategorie $bateauCategory): self
     {
-        if ($this->contenirs->removeElement($contenir)) {
+        if ($this->bateauCategories->removeElement($bateauCategory)) {
             // set the owning side to null (unless already changed)
-            if ($contenir->getCategorie() === $this) {
-                $contenir->setCategorie(null);
+            if ($bateauCategory->getCategorie() === $this) {
+                $bateauCategory->setCategorie(null);
             }
         }
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Type>
+     */
+    public function getTypes(): Collection
+    {
+        return $this->types;
+    }
+
+    public function addType(Type $type): self
+    {
+        if (!$this->types->contains($type)) {
+            $this->types->add($type);
+            $type->setCategorie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeType(Type $type): self
+    {
+        if ($this->types->removeElement($type)) {
+            // set the owning side to null (unless already changed)
+            if ($type->getCategorie() === $this) {
+                $type->setCategorie(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -17,14 +17,17 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?client $client = null;
+    private ?Client $client = null;
 
-    #[ORM\ManyToMany(targetEntity: type::class)]
-    private Collection $type;
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?Traversee $traversee = null;
+
+    #[ORM\OneToMany(mappedBy: 'reservation', targetEntity: ReservationType::class)]
+    private Collection $reservationTypes;
 
     public function __construct()
     {
-        $this->type = new ArrayCollection();
+        $this->reservationTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,27 +47,46 @@ class Reservation
         return $this;
     }
 
-    /**
-     * @return Collection<int, type>
-     */
-    public function getType(): Collection
+    public function getTraversee(): ?traversee
     {
-        return $this->type;
+        return $this->traversee;
     }
 
-    public function addType(type $type): self
+    public function setTraversee(?traversee $traversee): self
     {
-        if (!$this->type->contains($type)) {
-            $this->type->add($type);
+        $this->traversee = $traversee;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReservationType>
+     */
+    public function getReservationTypes(): Collection
+    {
+        return $this->reservationTypes;
+    }
+
+    public function addReservationType(ReservationType $reservationType): self
+    {
+        if (!$this->reservationTypes->contains($reservationType)) {
+            $this->reservationTypes->add($reservationType);
+            $reservationType->setReservation($this);
         }
 
         return $this;
     }
 
-    public function removeType(type $type): self
+    public function removeReservationType(ReservationType $reservationType): self
     {
-        $this->type->removeElement($type);
+        if ($this->reservationTypes->removeElement($reservationType)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationType->getReservation() === $this) {
+                $reservationType->setReservation(null);
+            }
+        }
 
         return $this;
     }
+
 }

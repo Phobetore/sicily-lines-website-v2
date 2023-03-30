@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PeriodeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,18 +16,52 @@ class Periode
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\OneToMany(mappedBy: 'periode', targetEntity: LiaisonPeriodeType::class)]
+    private Collection $liaisonPeriodeTypes;
+
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $dateFin = null;
-
-    #[ORM\Column]
-    private ?int $tarifer_periode = null;
+    public function __construct()
+    {
+        $this->liaisonPeriodeTypes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return Collection<int, LiaisonPeriodeType>
+     */
+    public function getLiaisonPeriodeTypes(): Collection
+    {
+        return $this->liaisonPeriodeTypes;
+    }
+
+    public function addLiaisonPeriodeType(LiaisonPeriodeType $liaisonPeriodeType): self
+    {
+        if (!$this->liaisonPeriodeTypes->contains($liaisonPeriodeType)) {
+            $this->liaisonPeriodeTypes->add($liaisonPeriodeType);
+            $liaisonPeriodeType->setPeriode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLiaisonPeriodeType(LiaisonPeriodeType $liaisonPeriodeType): self
+    {
+        if ($this->liaisonPeriodeTypes->removeElement($liaisonPeriodeType)) {
+            // set the owning side to null (unless already changed)
+            if ($liaisonPeriodeType->getPeriode() === $this) {
+                $liaisonPeriodeType->setPeriode(null);
+            }
+        }
+
+        return $this;
     }
 
     public function getDateDebut(): ?\DateTimeInterface
@@ -52,15 +88,4 @@ class Periode
         return $this;
     }
 
-    public function getTariferPeriode(): ?int
-    {
-        return $this->tarifer_periode;
-    }
-
-    public function setTariferPeriode(int $tarifer_periode): self
-    {
-        $this->tarifer_periode = $tarifer_periode;
-
-        return $this;
-    }
 }

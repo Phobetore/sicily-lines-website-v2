@@ -18,20 +18,14 @@ class Client
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 100)]
-    private ?string $prenom = null;
-
-    #[ORM\Column(length: 100)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $adresse = null;
 
-    #[ORM\Column(length: 5, nullable: true)]
-    private ?string $code_postal = null;
+    #[ORM\Column(length: 6)]
+    private ?string $cp = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $num_telephone = null;
+    #[ORM\Column(length: 100)]
+    private ?string $ville = null;
 
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Reservation::class, orphanRemoval: true)]
     private Collection $reservations;
@@ -58,62 +52,38 @@ class Client
         return $this;
     }
 
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): self
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
     public function getAdresse(): ?string
     {
         return $this->adresse;
     }
 
-    public function setAdresse(?string $adresse): self
+    public function setAdresse(string $adresse): self
     {
         $this->adresse = $adresse;
 
         return $this;
     }
 
-    public function getCodePostal(): ?string
+    public function getCp(): ?string
     {
-        return $this->code_postal;
+        return $this->cp;
     }
 
-    public function setCodePostal(?string $code_postal): self
+    public function setCp(string $cp): self
     {
-        $this->code_postal = $code_postal;
+        $this->cp = $cp;
 
         return $this;
     }
 
-    public function getNumTelephone(): ?string
+    public function getVille(): ?string
     {
-        return $this->num_telephone;
+        return $this->ville;
     }
 
-    public function setNumTelephone(?string $num_telephone): self
+    public function setVille(string $ville): self
     {
-        $this->num_telephone = $num_telephone;
+        $this->ville = $ville;
 
         return $this;
     }

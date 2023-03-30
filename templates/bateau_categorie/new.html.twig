@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New BateauCategorie{% endblock %}
+
+{% block body %}
+    <h1>Create new BateauCategorie</h1>
+
+    {{ include('bateau_categorie/_form.html.twig') }}
+
+    <a href="{{ path('app_bateau_categorie_index') }}">back to list</a>
+{% endblock %}
