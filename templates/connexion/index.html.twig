@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/PageConnexion.css') }}">
+        
+{% endblock %}
+
+{% block body %}
+    <section id="connexion" class="connexion">
+        <div class="container">
+            <div class="section-header">
+                <form class="form" action="" method="">
+                    <h2 class="section-title"> Connexion </h2>
+                    <div class="email">
+                       <div class="enveloppe">
+                    <i class="fa-regular fa-envelope"></i>
+                        </div>
+                        <input type="email" id="exampleInputEmail1"  placeholder= "Email">
+                    </div>
+                    <div class="password">
+                        <div class="padlock">
+                    <i class="fa-solid fa-lock"></i>
+                     </div>
+                        <input type="password" id="exampleInputPassword1" placeholder="Mot de passe">
+                    </div>
+
+                    <div class="checkout">
+                        <input type="checkbox" class="check">
+                        <label class="souvenir" for="check"> Se souvenir de moi </label>
+                    </div>
+                    <div class="Envoyer">
+                        <button type="submit" class="submit">Connexion</button>
+                    </div>
+                    <div class="mdp">
+                        <a class="MDP" href="#MdpOublié"> Mot de passe oublié ?</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}
