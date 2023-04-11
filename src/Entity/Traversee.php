@@ -41,12 +41,12 @@ class Traversee
         return $this->id;
     }
 
-    public function getLiaison(): ?liaison
+    public function getLiaison(): ?Liaison
     {
         return $this->liaison;
     }
 
-    public function setLiaison(?liaison $liaison): self
+    public function setLiaison(?Liaison $liaison): self
     {
         $this->liaison = $liaison;
 
