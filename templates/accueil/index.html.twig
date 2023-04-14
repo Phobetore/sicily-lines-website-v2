@@ -5,13 +5,20 @@
 {% block body %}
 <h2>Nous vous proposons les traversées suivantes : </h2>
 <br> 
-   
-    <div class="card text-center" style="width:11rem;">
-							<img class="card-img-top" src="images/.." >
-							<div class="card-body">
-								<h5 class="card-title"> nom de la traversee </h5>
-								<a id="mywish" href="" class="btn btn-primary">Reserver</a>
-							</div>
-						</div>
+<section style="display:flex">
 
+   {% for traversee in traversees %}
+    <div class="card text-center" style="width:11rem; margin: 1vw;">
+		<img class="card-img-top" src="{{ asset('images/logo.png') }}" >
+		<div class="card-body">
+			<h5 class="card-title"> Depart: {{ traversee.getLiaison().getPortDepart() }} </h5>
+			<h5 class="card-title"> Arrivée: {{ traversee.getLiaison().getPortArrivee() }} </h5>
+			<h5 class="card-title"> Date: {{ traversee.getHeure().format('d M') }} </h5>
+			<h5 class="card-title"> Heure: {{ traversee.getHeure().format('H:i') }} </h5>
+			<a id="mywish" href="" class="btn btn-primary">Reserver</a>
+		</div>
+	</div>
+	{% endfor %}
+
+</section>
 {% endblock %}
