@@ -118,4 +118,10 @@ class Traversee
 
         return $this;
     }
+
+
+    public function __toString()
+    {
+        return $this->liaison . " | " . $this->date->format('Y-m-d') . " - " . $this->heure->format('H:i:s');
+    }
 }

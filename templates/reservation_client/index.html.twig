@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservation{% endblock %}
+
+{% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('styles/PageReservation.css') }}">
+        
+{% endblock %}
+
+{% block body %}
+    
+<h1> Informations civilités </h1>
+
+
+<div class="test"> 
+<div class="section-info">     
+<h2> Passager n°: </h2>
+<form action="/ma-page-de-traitement" method="post">
+    <div>
+        <label for="name">Nom :</label>
+        <input type="text" id="name" name="user_name">
+    </div>
+    <div>
+        <label for="mail">e-mail&nbsp;:</label>
+        <input type="email" id="mail" name="user_mail">
+    </div>
+    <div>
+        <label for="msg">Message :</label>
+        <textarea id="msg" name="user_message"></textarea>
+    </div>
+</form>
+
+{{ include('reservation/_form.html.twig') }}
+
+</div>
+
+<div class="rectangle"> 
+
+<p> disnd</p>
+<div class="rectangle2">
+
+
+</div>
+</div>
+
+
+</div>
+
+
+{% endblock %}
+
